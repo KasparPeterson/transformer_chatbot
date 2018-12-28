@@ -11,12 +11,12 @@ from model.sentiment import pick_emoji, clean_emoji
 from config import get_model_config
 import random
 
-      
+
 class TransformerAgent(Agent):
     @staticmethod
     def add_cmdline_args(argparser):
         agent_args = argparser.add_argument_group('Agent parameters')
-        agent_args.add_argument('-gpu', '--gpu', type=int, default=-1, 
+        agent_args.add_argument('-gpu', '--gpu', type=int, default=-1,
                                 help='which GPU to use')
         agent_args.add_argument('--no-cuda', type=bool, default=False,
                                 help='disable GPUs even if available. otherwise, will use GPUs if '
@@ -62,7 +62,7 @@ class TransformerAgent(Agent):
                                 help='')
         agent_args.add_argument('--length_penalty', type=float, default=0.6,
                                 help='')
-        
+
         return argparser
 
     def __init__(self, opt, shared=None):
@@ -133,7 +133,6 @@ class TransformerAgent(Agent):
                 state_dict = state_dict['model']
 
             self.model.load_state_dict(state_dict)
-            print('Weights loaded from {}'.format(model_config.checkpoint_path))
 
             if self.use_cuda:
                 self.model = self.model.cuda()
@@ -157,11 +156,12 @@ class TransformerAgent(Agent):
 
     def _parse(self, text):
         # todo: fix grammar mistakes?
+
         persona_info = []
         dialog = []
         for subtext in text.split('\n'):
             subtext = subtext.strip()
-            
+
             if self.opt['wild_mode'] and len(self.history['info']) == 0 and len(self.history['dialog']) == 0:
                 subtext = 'your persona: ' + subtext
 
@@ -173,6 +173,18 @@ class TransformerAgent(Agent):
                 subtext = self._preprocess_text(subtext).strip()
                 dialog.append(subtext)
 
+        persona_info = [
+            "i like to watch basketball and nba",
+            "i am an entrepreneur",
+            "i do not eat white bread",
+            "i enjoy sunny weathers",
+            "i go to the gym three times a week",
+            "i drive a mercedes",
+            "my name is johannes",
+            "i am 26 years old",
+            "i live in tallinn, estonia",
+            "my wife name is emma-leena"
+        ]
         return persona_info, dialog
 
     def observe(self, observation):
@@ -186,7 +198,7 @@ class TransformerAgent(Agent):
             if info:
                 self.history['str_info'] = ' '.join(info)
             self.history['str_dialog'].extend(dialog)
-        
+
             info = sum([self.vocab.string2ids(i) for i in info], [])
             self.history['info'].extend(info)
 
@@ -199,13 +211,12 @@ class TransformerAgent(Agent):
 
                 self.history['dialog'].extend(d)
 
-        observation['agent'] = self        
+        observation['agent'] = self
 
         self.episode_done = observation['episode_done']
         self.observation = observation
-        
         return observation
-    
+
     def act(self):
         return self.batch_act([self.observation])[0]
 
