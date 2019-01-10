@@ -109,5 +109,4 @@ class FacebookDataset(Dataset):
         y = [self.vocab.bos_id] + dialog[dialog_end-1] + [self.vocab.eos_id]
         y = y[:self.max_lengths]
 
-        print("__getitem__ persona_info: ", persona_info)
         return persona_info, h, y
