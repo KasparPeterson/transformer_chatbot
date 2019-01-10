@@ -46,11 +46,9 @@ def get_trainer_config():
                        'last_checkpoint_path': './checkpoints/last_checkpoint',
                        'interrupt_checkpoint_path': './checkpoints/interrupt_checkpoint',
                        'train_datasets': ['./datasets/ConvAI2/train_self_revised_no_cands.txt',
-                                          './datasets/ConvAI2/train_self_original_no_cands.txt',
-                                          './datasets/DailyDialog/train_dailydialog.txt'],
+                                          './datasets/ConvAI2/train_self_original_no_cands.txt'],
                        'test_datasets': ['./datasets/ConvAI2/valid_self_revised_no_cands.txt',
-                                         './datasets/ConvAI2/valid_self_original_no_cands.txt',
-                                         './datasets/DailyDialog/valid_dailydialog.txt']})
+                                         './datasets/ConvAI2/valid_self_original_no_cands.txt']})
 
     return config
 
